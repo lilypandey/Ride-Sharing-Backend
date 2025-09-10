@@ -16,9 +16,11 @@ class TripOut(TripCreate):
     id: int
     status: RideStatus
     fare: float
+    driver_id: str | None
 
     class Config:
         orm_mode = True
 
 class StatusUpdate(BaseModel):
     status: RideStatus
+

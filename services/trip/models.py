@@ -5,6 +5,10 @@ import enum
 from datetime import datetime
 
 Base = declarative_base()
+from sqlalchemy import Column, Integer, String, Enum, Float, DateTime
+from database import Base
+from datetime import datetime
+import enum
 
 class RideStatus(str, enum.Enum):
     requested = "requested"
@@ -14,7 +18,7 @@ class RideStatus(str, enum.Enum):
 
 class Trip(Base):
     __tablename__ = "trips"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     rider_id = Column(String, nullable=False)
     driver_id = Column(String, nullable=True)

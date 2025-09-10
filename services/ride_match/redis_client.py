@@ -1,15 +1,11 @@
 import redis.asyncio as aioredis
 import os
 
-REDIS_HOST = os.getenv("REDIS_HOST", "redis")
-REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
+REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379")
 
 async def get_redis():
-    redis = await aioredis.from_url(f"redis://{REDIS_HOST}:{REDIS_PORT}")
-    return redis
-
-async def get_active_drivers():
-    redis = await get_redis()
-    drivers = await redis.hgetall("drivers:location", encoding="utf-8")
-    await redis.close()
-    return drivers
+    redis = await aioredis.from_url(REDIS_URL, decode_responses=True)
+    try:
+        yield redis
+    finally:
+        await redis.close()
