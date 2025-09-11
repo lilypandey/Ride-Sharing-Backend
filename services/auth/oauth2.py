@@ -4,7 +4,9 @@ from jose import jwt, JWTError
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from schemas import TokenData 
+from dotenv import load_dotenv
 
+load_dotenv()
 # Loading required env vars
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
