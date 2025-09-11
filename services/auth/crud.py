@@ -1,24 +1,63 @@
 from sqlalchemy.orm import Session
 import models, schemas, utils
 
-def get_user_by_email(db: Session, email: str):
-    return db.query(models.User).filter(models.User.email == email).first()
 
-def create_user(db: Session, user: schemas.UserCreate):
-    # create user row
+# Get user by contact
+def get_user_by_contact(db: Session, contact: str):
+    return db.query(models.User).filter(models.User.contact == contact).first()
+
+
+# Create Rider
+def create_rider(db: Session, user: schemas.RiderCreate):
+    # hash password
     hashed_pw = utils.hash_password(user.password)
-    db_user = models.User(email=user.email, password=hashed_pw, role=user.role)
+
+    # create base User row
+    db_user = models.User(
+        contact=user.contact,
+        password=hashed_pw,
+        role=user.role
+    )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
 
-    # create role-specific details
-    if user.role == schemas.UserRole.rider:
-        rider = models.Rider(user_id=db_user.id, name=user.name, contact=user.contact)
-        db.add(rider)
-    else:
-        driver = models.Driver(user_id=db_user.id, name=user.name, contact=user.contact, vehicle=user.vehicle or "", status="offline")
-        db.add(driver)
-
+    # create Rider row linked to User
+    rider = models.Rider(
+        user_id=db_user.id,
+        name=user.name
+    )
+    db.add(rider)
     db.commit()
+    db.refresh(rider)
+
+    return db_user
+
+
+# Create Driver
+def create_driver(db: Session, user: schemas.DriverCreate):
+    # hash password
+    hashed_pw = utils.hash_password(user.password)
+
+    # create base User row
+    db_user = models.User(
+        contact=user.contact,
+        password=hashed_pw,
+        role=user.role
+    )
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+
+    # create Driver row linked to User
+    driver = models.Driver(
+        user_id=db_user.id,
+        name=user.name,
+        vehicle_license=user.vehicle_license,
+        status="offline"
+    )
+    db.add(driver)
+    db.commit()
+    db.refresh(driver)
+
     return db_user
