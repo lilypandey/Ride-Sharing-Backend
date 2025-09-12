@@ -4,5 +4,4 @@ sqlalchemy
 psycopg2-binary
 pydantic
 passlib[bcrypt]
-python-jose
 python-jose[cryptography]
