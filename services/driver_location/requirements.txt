@@ -3,3 +3,4 @@ uvicorn
 redis[async]
 pydantic<2
 python-jose[cryptography]
+python-dotenv

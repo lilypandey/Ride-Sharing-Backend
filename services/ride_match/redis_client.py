@@ -1,11 +1,10 @@
-import redis.asyncio as aioredis
 import os
+import redis.asyncio as redis
+from dotenv import load_dotenv
 
-REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379")
+load_dotenv()
 
-async def get_redis():
-    redis = await aioredis.from_url(REDIS_URL, decode_responses=True)
-    try:
-        yield redis
-    finally:
-        await redis.close()
+REDIS_HOST = os.getenv("REDIS_HOST", "redis")
+REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
+
+redis_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)

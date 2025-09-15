@@ -65,31 +65,7 @@ def login(
     access_token = oauth2.create_access_token(
         data={"user_id": user.id, "role": user.role.value}
     )
-    refresh_token = oauth2.create_refresh_token(
-        data={"user_id": user.id, "role": user.role.value}
-    )
-    return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
-
-
-#Refresh Token
-@app.post("/refresh", response_model=schemas.Token)
-def refresh_token(refresh_token: str, db: Session = Depends(get_db)):
-    try:
-        payload = jwt.decode(refresh_token, oauth2.SECRET_KEY, algorithms=[oauth2.ALGORITHM])
-        user_id = payload.get("user_id")
-        role = payload.get("role")
-        if user_id is None or role is None:
-            raise HTTPException(status_code=401, detail="Invalid refresh token")
-    except JWTError:
-        raise HTTPException(status_code=401, detail="Invalid refresh token")
-
-    user = db.query(models.User).filter(models.User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=401, detail="User not found")
-
-    new_access = oauth2.create_access_token(data={"user_id": user.id, "role": user.role.value})
-    new_refresh = oauth2.create_refresh_token(data={"user_id": user.id, "role": user.role.value})
-    return {"access_token": new_access, "refresh_token": new_refresh, "token_type": "bearer"}
+    return {"access_token": access_token, "token_type": "bearer"}
 
 
 # Current User

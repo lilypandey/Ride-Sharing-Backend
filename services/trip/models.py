@@ -1,10 +1,3 @@
-# models.py
-from sqlalchemy import Column, Integer, String, Enum, Float, DateTime
-from sqlalchemy.ext.declarative import declarative_base
-import enum
-from datetime import datetime
-
-Base = declarative_base()
 from sqlalchemy import Column, Integer, String, Enum, Float, DateTime
 from database import Base
 from datetime import datetime
@@ -15,6 +8,7 @@ class RideStatus(str, enum.Enum):
     accepted = "accepted"
     ongoing = "ongoing"
     completed = "completed"
+    cancelled = "cancelled"
 
 class Trip(Base):
     __tablename__ = "trips"

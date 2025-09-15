@@ -14,9 +14,9 @@ async def get_producer() -> AIOKafkaProducer:
         await producer.start()
     return producer
 
-async def publish_trip_request(payload: dict):
+async def publish_match_result(payload: dict):
     prod = await get_producer()
-    await prod.send_and_wait("trip_requests", payload)
+    await prod.send_and_wait("trip_matches", payload)
 
 async def stop_producer():
     global producer

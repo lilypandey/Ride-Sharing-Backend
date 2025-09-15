@@ -1,22 +1,27 @@
 from pydantic import BaseModel
 from enum import Enum
+from datetime import datetime
 
 class RideStatus(str, Enum):
     requested = "requested"
     accepted = "accepted"
     ongoing = "ongoing"
     completed = "completed"
+    cancelled = "cancelled"
 
 class TripCreate(BaseModel):
-    rider_id: str
     origin: str
     destination: str
 
-class TripOut(TripCreate):
+class TripOut(BaseModel):
     id: int
-    status: RideStatus
-    fare: float
+    rider_id: str
     driver_id: str | None
+    origin: str
+    destination: str
+    status: RideStatus
+    fare: float | None = None
+    timestamp: datetime
 
     class Config:
         orm_mode = True
